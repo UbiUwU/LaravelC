@@ -7,27 +7,23 @@ use Illuminate\Http\Request;
 
 class ConvocatoriaController extends Controller
 {
-    // Obtener todas las convocatorias
+    // Obtener todas las convocatorias con la información de la empresa
     public function index()
     {
-        return response()->json(Convocatoria::all());
+        // Cargar la relación 'empresa' con la convocatoria
+        $convocatorias = Convocatoria::with('empresa')->get();
+        return response()->json($convocatorias);
     }
 
-    // Crear una nueva convocatoria
-    public function store(Request $request)
+    // Obtener una convocatoria específica
+    public function show($id)
     {
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date',
-            'ubicacion' => 'required|string',
-            'salario' => 'required|numeric',
-            'requisitos' => 'required|string',
-        ]);
+        $convocatoria = Convocatoria::with('empresa')->find($id);
 
-        $convocatoria = Convocatoria::create($request->all());
+        if ($convocatoria) {
+            return response()->json($convocatoria);
+        }
 
-        return response()->json($convocatoria, 201);
+        return response()->json(['message' => 'Convocatoria no encontrada'], 404);
     }
 }
