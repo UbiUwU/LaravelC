@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\Convocatoria;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ConvocatoriaController;
 
-Route::get('/convocatorias', function () {
-    return Convocatoria::all();
+Route::middleware('api')->group(function () {
+    // Rutas de API
+    Route::get('convocatoriasapi', [ConvocatoriaController::class, 'index']);
 });
